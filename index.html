@@ -343,9 +343,9 @@
 
 <script>
   (function() {
-    // --- CONFIG ---
-    const TELEGRAM_LINK = "https://t.me/+MRB4wBkbtY8yMDNl";
-    const PIXEL_ID = "2483419995475953";
+    // --- CONFIG (updated with new pixel & channel) ---
+    const TELEGRAM_LINK = "https://t.me/+J-fcBrwum8VkMzNl";
+    const PIXEL_ID = "1038733235815915";        // new pixel ID
     const BRAND = "PANKAJ_BHARDWAJ";
 
     // toast helper
@@ -454,29 +454,12 @@
     }
 
     // --- DOM ready ---
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', function() {
-        attachButton('joinBtn1', 'below_name');
-        attachButton('joinBtn2', 'bottom');
-        initScroll();
-        initTime();
-        // enhanced PageView
-        const fbqFunc = safeFbq();
-        if (typeof fbqFunc === 'function') {
-          fbqFunc('track', 'PageView', {
-            page_type: 'educational_telegram_landing',
-            brand: BRAND,
-            pixel_id: PIXEL_ID,
-            buttons: 2
-          });
-          console.log(`🔥 ${BRAND} | Edu compliant | Pixel ${PIXEL_ID}`);
-        }
-      });
-    } else {
+    function initAll() {
       attachButton('joinBtn1', 'below_name');
       attachButton('joinBtn2', 'bottom');
       initScroll();
       initTime();
+      // enhanced PageView
       const fbqFunc = safeFbq();
       if (typeof fbqFunc === 'function') {
         fbqFunc('track', 'PageView', {
@@ -487,6 +470,12 @@
         });
         console.log(`🔥 ${BRAND} | Edu compliant | Pixel ${PIXEL_ID}`);
       }
+    }
+
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', initAll);
+    } else {
+      initAll();
     }
 
     // ---- Ticker & watch count (demo) ----
@@ -534,7 +523,7 @@
   })();
 </script>
 
-<!-- Meta Pixel (NEW) – async load with noscript fallback -->
+<!-- Meta Pixel Code (NEW) – pixel ID 1038733235815915 -->
 <script>
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -544,12 +533,12 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '2483419995475953');
+  fbq('init', '1038733235815915');
   fbq('track', 'PageView');
 </script>
 <noscript>
-  <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=2483419995475953&ev=PageView&noscript=1"/>
+  <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1038733235815915&ev=PageView&noscript=1"/>
 </noscript>
-<!-- END META PIXEL -->
+<!-- End Meta Pixel Code -->
 </body>
 </html>
