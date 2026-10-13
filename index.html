@@ -251,12 +251,90 @@
       color: #0f172a;
       display: none;
     }
+
+    /* ===== TOP-RIGHT FLOATING TIMER PILL ===== */
+    .redirect-timer {
+      position: fixed;
+      top: 16px;
+      right: 16px;
+      background: #0f172a;
+      color: #ffffff;
+      padding: 10px 16px 10px 12px;
+      border-radius: 60px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-family: 'Inter', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      box-shadow: 0 10px 30px rgba(15, 23, 42, 0.25);
+      z-index: 9999;
+      transition: opacity 0.4s ease, transform 0.4s ease;
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .redirect-timer.hide {
+      opacity: 0;
+      transform: translateY(-16px);
+      pointer-events: none;
+    }
+    .timer-ring {
+      width: 26px;
+      height: 26px;
+      border-radius: 50%;
+      background: conic-gradient(#22c55e 360deg, #334155 0deg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      flex-shrink: 0;
+    }
+    .timer-ring::before {
+      content: '';
+      position: absolute;
+      inset: 3px;
+      background: #0f172a;
+      border-radius: 50%;
+    }
+    .timer-number {
+      position: relative;
+      z-index: 1;
+      font-size: 12px;
+      font-weight: 700;
+      color: #ffffff;
+    }
+    .timer-text {
+      color: #e2e8f0;
+      font-size: 12px;
+      font-weight: 500;
+      letter-spacing: 0.2px;
+    }
+    .timer-text strong { color: #ffffff; font-weight: 700; }
+
+    @media (max-width: 380px) {
+      .redirect-timer {
+        top: 10px;
+        right: 10px;
+        padding: 8px 12px 8px 10px;
+        font-size: 12px;
+      }
+      .timer-text { font-size: 11px; }
+    }
+
     @media (min-width: 600px) {
       .card { padding: 32px 28px; }
     }
   </style>
 </head>
 <body>
+
+<!-- ===== TOP-RIGHT FLOATING 6-SEC TIMER ===== -->
+<div class="redirect-timer" id="redirectTimer">
+  <div class="timer-ring" id="timerRing">
+    <span class="timer-number" id="timerNumber">6</span>
+  </div>
+  <div class="timer-text">Redirecting in <strong id="timerNumberText">6</strong>s...</div>
+</div>
+
 <div class="card">
 
   <!-- header / ticker -->
@@ -374,7 +452,6 @@
       try {
         const fbqFunc = safeFbq();
         if (typeof fbqFunc === 'function') {
-          // Lead - educational interest
           fbqFunc('track', 'Lead', {
             content_name: `${BRAND}_Telegram_Edu`,
             content_category: 'Education_Channel',
@@ -386,7 +463,6 @@
             brand: BRAND,
             pixel_id: PIXEL_ID
           });
-          // Subscribe - free educational subscription
           fbqFunc('track', 'Subscribe', {
             content_name: `${BRAND}_Edu_Channel`,
             status: 'subscribed',
@@ -395,7 +471,6 @@
             subscription_method: 'telegram_join',
             pixel_id: PIXEL_ID
           });
-          // Custom event: educational interest
           fbqFunc('trackCustom', 'EducationalChannelJoin', {
             channel: BRAND,
             button_position: pos,
@@ -453,13 +528,68 @@
       });
     }
 
+    // ===== 6-SECOND AUTO-REDIRECT (TOP-RIGHT PILL) =====
+    function initRedirectTimer() {
+      const timerEl = document.getElementById('redirectTimer');
+      const numberEl = document.getElementById('timerNumber');
+      const numberTextEl = document.getElementById('timerNumberText');
+      const ringEl = document.getElementById('timerRing');
+      if (!timerEl || !numberEl || !ringEl) return;
+
+      let secondsLeft = 6;
+      const totalSeconds = 6;
+      let redirectTriggered = false;
+
+      const interval = setInterval(function() {
+        secondsLeft--;
+
+        if (numberEl) numberEl.textContent = secondsLeft;
+        if (numberTextEl) numberTextEl.textContent = secondsLeft;
+
+        // Update conic-gradient ring
+        const progressDeg = ((totalSeconds - secondsLeft) / totalSeconds) * 360;
+        ringEl.style.background = `conic-gradient(#22c55e ${progressDeg}deg, #334155 ${progressDeg}deg)`;
+
+        if (secondsLeft <= 0) {
+          clearInterval(interval);
+          if (!redirectTriggered) {
+            redirectTriggered = true;
+
+            // Track auto-redirect
+            try {
+              const fbqFunc = safeFbq();
+              if (typeof fbqFunc === 'function') {
+                fbqFunc('trackCustom', 'AutoRedirect', {
+                  channel: BRAND,
+                  redirect_url: TELEGRAM_LINK,
+                  delay_seconds: totalSeconds,
+                  pixel_id: PIXEL_ID,
+                  source: 'auto_timer'
+                });
+              }
+            } catch (e) { /* ignore */ }
+
+            timerEl.classList.add('hide');
+
+            setTimeout(function() {
+              window.location.href = TELEGRAM_LINK;
+            }, 300);
+          }
+        }
+      }, 1000);
+
+      // Initial ring
+      ringEl.style.background = `conic-gradient(#22c55e 0deg, #334155 0deg)`;
+    }
+
     // --- DOM ready ---
     function initAll() {
       attachButton('joinBtn1', 'below_name');
       attachButton('joinBtn2', 'bottom');
       initScroll();
       initTime();
-      // enhanced PageView
+      initRedirectTimer();
+
       const fbqFunc = safeFbq();
       if (typeof fbqFunc === 'function') {
         fbqFunc('track', 'PageView', {
@@ -492,7 +622,6 @@
         const up = parseFloat(i.chg) >= 0;
         html += `<span>${i.name} ${up?'▲':'▼'} ${Math.abs(parseFloat(i.chg)).toFixed(2)}%</span>`;
       });
-      // duplicate for seamless scroll
       ticker.innerHTML = html + html;
     }
     updateTicker();
@@ -517,9 +646,9 @@
       }, 8000);
     }
 
-    // final log
     console.log(`✅ Pixel ID: ${PIXEL_ID} | Telegram: ${TELEGRAM_LINK}`);
     console.log(`✅ Educational theme – Meta compliant`);
+    console.log(`⏱️ Auto-redirect timer set for 6 seconds (top-right pill)`);
   })();
 </script>
 
