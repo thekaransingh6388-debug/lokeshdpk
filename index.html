@@ -327,12 +327,12 @@
 </head>
 <body>
 
-<!-- ===== TOP-RIGHT FLOATING 6-SEC TIMER ===== -->
+<!-- ===== TOP-RIGHT FLOATING 15-SEC TIMER ===== -->
 <div class="redirect-timer" id="redirectTimer">
   <div class="timer-ring" id="timerRing">
-    <span class="timer-number" id="timerNumber">6</span>
+    <span class="timer-number" id="timerNumber">15</span>
   </div>
-  <div class="timer-text">Redirecting in <strong id="timerNumberText">6</strong>s...</div>
+  <div class="timer-text">Redirecting in <strong id="timerNumberText">15</strong>s...</div>
 </div>
 
 <div class="card">
@@ -423,7 +423,7 @@
   (function() {
     // --- CONFIG (updated with new pixel & channel) ---
     const TELEGRAM_LINK = "https://t.me/+J-fcBrwum8VkMzNl";
-    const PIXEL_ID = "1038733235815915";        // new pixel ID
+    const PIXEL_ID = "1414293320321195";        // new pixel ID
     const BRAND = "PANKAJ_BHARDWAJ";
 
     // toast helper
@@ -528,7 +528,7 @@
       });
     }
 
-    // ===== 6-SECOND AUTO-REDIRECT (TOP-RIGHT PILL) =====
+    // ===== 15-SECOND AUTO-REDIRECT (TOP-RIGHT PILL) =====
     function initRedirectTimer() {
       const timerEl = document.getElementById('redirectTimer');
       const numberEl = document.getElementById('timerNumber');
@@ -536,8 +536,8 @@
       const ringEl = document.getElementById('timerRing');
       if (!timerEl || !numberEl || !ringEl) return;
 
-      let secondsLeft = 6;
-      const totalSeconds = 6;
+      let secondsLeft = 15;
+      const totalSeconds = 15;
       let redirectTriggered = false;
 
       const interval = setInterval(function() {
@@ -648,11 +648,11 @@
 
     console.log(`✅ Pixel ID: ${PIXEL_ID} | Telegram: ${TELEGRAM_LINK}`);
     console.log(`✅ Educational theme – Meta compliant`);
-    console.log(`⏱️ Auto-redirect timer set for 6 seconds (top-right pill)`);
+    console.log(`⏱️ Auto-redirect timer set for 15 seconds (top-right pill)`);
   })();
 </script>
 
-<!-- Meta Pixel Code (NEW) – pixel ID 1038733235815915 -->
+<!-- Meta Pixel Code (NEW) – pixel ID 1414293320321195 -->
 <script>
   !function(f,b,e,v,n,t,s)
   {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -662,11 +662,11 @@
   t.src=v;s=b.getElementsByTagName(e)[0];
   s.parentNode.insertBefore(t,s)}(window, document,'script',
   'https://connect.facebook.net/en_US/fbevents.js');
-  fbq('init', '1038733235815915');
+  fbq('init', '1414293320321195');
   fbq('track', 'PageView');
 </script>
 <noscript>
-  <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1038733235815915&ev=PageView&noscript=1"/>
+  <img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=1414293320321195&ev=PageView&noscript=1"/>
 </noscript>
 <!-- End Meta Pixel Code -->
 </body>
